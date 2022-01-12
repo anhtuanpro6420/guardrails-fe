@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Typography, Space, List } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { Typography, List } from 'antd';
 import { getRepos } from 'apis/repo.api';
 import { IRepo } from 'interfaces/repo.interface';
 import './Repo.scss';
@@ -7,6 +8,7 @@ import './Repo.scss';
 const { Text } = Typography;
 
 const Repo: FC = () => {
+    const history = useHistory();
     const [repos, setRepos] = useState([] as Array<IRepo>);
 
     const fetchRepos = async () => {
@@ -25,7 +27,10 @@ const Repo: FC = () => {
                 bordered
                 dataSource={repos}
                 renderItem={(repo: IRepo) => (
-                    <List.Item className='repo-item'>
+                    <List.Item
+                        className='repo-item'
+                        onClick={() => history.push(`/repos/${repo.id}`)}
+                    >
                         <Text strong>{repo.name}</Text>
                     </List.Item>
                 )}

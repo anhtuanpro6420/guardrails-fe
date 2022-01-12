@@ -7,4 +7,9 @@ const getRepos = async (): Promise<Array<IRepo>> => {
     return repos;
 };
 
-export { getRepos };
+const getRepoDetail = async (repoId: string): Promise<IRepo> => {
+    const { data: repo }: { data: IRepo } = await axios.get(`/repo/${repoId}`);
+    return repo;
+};
+
+export { getRepos, getRepoDetail };
