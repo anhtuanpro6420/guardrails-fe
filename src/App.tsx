@@ -1,19 +1,15 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import './App.less';
 import Wrapper from 'components/Wrapper';
-import Home from 'pages/Home';
-import store from './store';
+import Repo from 'pages/Repo';
 
 function App(): JSX.Element {
     const routes = (
-        <Provider store={store}>
-            <Switch>
-                <Route exact path='/' component={Home} />
-                <Route path='' component={Home} />
-            </Switch>
-        </Provider>
+        <Switch>
+            <Route exact path='/' component={Repo} />
+            <Route path='' component={Repo} />
+        </Switch>
     );
     return <Wrapper>{routes}</Wrapper>;
 }
