@@ -14,7 +14,6 @@ const RepoForm: FC<Props> = ({ repo, btnTitle, onSubmit }) => {
 
     const onFinish = (repoObj: IRepo) => {
         onSubmit({ ...repo, ...repoObj });
-        console.log({ ...repo, ...repoObj });
     };
 
     return (

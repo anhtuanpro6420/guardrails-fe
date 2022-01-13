@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, List, Typography } from 'antd';
-import { getRepoDetail } from 'apis/repo.api';
+import { getRepoDetailAPI } from 'apis/repo.api';
 import { IList } from 'interfaces/list.interface';
 import { IRepo } from 'interfaces/repo.interface';
 import './RepoDetail.scss';
@@ -14,7 +14,7 @@ const RepoDetail: FC = () => {
     const [repo, setRepo] = useState<IRepo | null>(null);
 
     const fetchRepoDetail = async (id: string) => {
-        const repoResponse: IRepo = await getRepoDetail(id);
+        const repoResponse: IRepo = await getRepoDetailAPI(id);
         setRepo(repoResponse);
     };
 
