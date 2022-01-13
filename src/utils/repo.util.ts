@@ -19,4 +19,19 @@ const updateRepo = (
     return cloneRepos;
 };
 
-export { createRepo, updateRepo };
+const deleteRepo = (
+    updatedRepo: IRepo,
+    repos: Array<IRepo> = []
+): Array<IRepo> => {
+    const cloneRepos: Array<IRepo> = [...repos];
+    const repoIndex = cloneRepos.findIndex(
+        (repo: IRepo) => repo.id === updatedRepo.id
+    );
+    const hasRepo: boolean = repoIndex > -1;
+    if (hasRepo) {
+        cloneRepos.splice(repoIndex, 1);
+    }
+    return cloneRepos;
+};
+
+export { createRepo, updateRepo, deleteRepo };

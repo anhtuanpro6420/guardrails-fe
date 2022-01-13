@@ -1,12 +1,17 @@
 import React, { FC, useEffect, useState } from 'react';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { Typography, List, Button, Modal } from 'antd';
-import { createRepoAPI, getReposAPI, updateRepoAPI } from 'apis/repo.api';
+import {
+    createRepoAPI,
+    deleteRepoAPI,
+    getReposAPI,
+    updateRepoAPI,
+} from 'apis/repo.api';
 import { IRepo } from 'interfaces/repo.interface';
 import './Repo.scss';
 import RepoForm from 'components/RepoForm';
-import { createRepo, updateRepo } from 'utils/repo.util';
+import { createRepo, deleteRepo, updateRepo } from 'utils/repo.util';
 
 const { Text } = Typography;
 
@@ -54,6 +59,14 @@ const Repo: FC = () => {
         closeModal();
     };
 
+    const handleDelete = async (event: React.MouseEvent, repoObj: IRepo) => {
+        event.stopPropagation();
+        const { id } = repoObj;
+        const deletedRepo: IRepo = await deleteRepoAPI(id);
+        const newRepos: Array<IRepo> = deleteRepo(deletedRepo, repos);
+        setRepos(newRepos);
+    };
+
     const renderReposHeader = () => {
         return (
             <div className='repo-header'>
@@ -82,6 +95,13 @@ const Repo: FC = () => {
                             <EditOutlined
                                 onClick={(event: React.MouseEvent) =>
                                     openUpdateModal(event, repoItem)
+                                }
+                            />
+                            <DeleteOutlined
+                                key='delete'
+                                data-testid='delete-icon'
+                                onClick={(event: React.MouseEvent) =>
+                                    handleDelete(event, repoItem)
                                 }
                             />
                         </div>

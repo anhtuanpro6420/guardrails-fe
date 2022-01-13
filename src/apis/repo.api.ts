@@ -21,11 +21,24 @@ const createRepoAPI = async (repoObj: IRepo): Promise<IRepo> => {
 
 const updateRepoAPI = async (repoObj: IRepo): Promise<IRepo> => {
     const { id, name } = repoObj;
-    const res = await axios.put(`/repo/${id}`, {
+    const { data: repo }: { data: IRepo } = await axios.put(`/repo/${id}`, {
         id,
         name,
     });
-    return res.data;
+    return repo;
 };
 
-export { getReposAPI, getRepoDetailAPI, createRepoAPI, updateRepoAPI };
+const deleteRepoAPI = async (repoId: number): Promise<IRepo> => {
+    const { data: repo }: { data: IRepo } = await axios.delete(
+        `/repo/${repoId}`
+    );
+    return repo;
+};
+
+export {
+    getReposAPI,
+    getRepoDetailAPI,
+    createRepoAPI,
+    updateRepoAPI,
+    deleteRepoAPI,
+};
