@@ -1,19 +1,20 @@
 import React, { FC, useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { Typography, List, Button, Modal } from 'antd';
-import { createRepoAPI, getReposAPI } from 'apis/repo.api';
+import { createRepoAPI, getReposAPI, updateRepoAPI } from 'apis/repo.api';
 import { IRepo } from 'interfaces/repo.interface';
 import './Repo.scss';
 import RepoForm from 'components/RepoForm';
-import { createRepo } from 'utils/repo.util';
+import { createRepo, updateRepo } from 'utils/repo.util';
 
 const { Text } = Typography;
 
 const Repo: FC = () => {
     const history = useHistory();
     const [repos, setRepos] = useState([] as Array<IRepo>);
-    const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+    const [repo, setRepo] = useState<IRepo | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const fetchRepos = async () => {
         const repoResponse: Array<IRepo> = await getReposAPI();
@@ -25,16 +26,32 @@ const Repo: FC = () => {
     }, []);
 
     const openCreateModal = () => {
-        setIsCreateModalVisible(true);
+        setIsModalVisible(true);
     };
 
-    const closeCreateModal = () => setIsCreateModalVisible(false);
+    const closeModal = () => {
+        setRepo(null);
+        setIsModalVisible(false);
+    };
 
     const handleCreate = async (repoObj: IRepo) => {
         const createdRepo: IRepo = await createRepoAPI(repoObj);
-        const updatedRepos: Array<IRepo> = createRepo(createdRepo, repos);
-        setRepos(updatedRepos);
-        setIsCreateModalVisible(false);
+        const newRepos: Array<IRepo> = createRepo(createdRepo, repos);
+        setRepos(newRepos);
+        closeModal();
+    };
+
+    const openUpdateModal = (event: React.MouseEvent, repoItem: IRepo) => {
+        event.stopPropagation();
+        setRepo(repoItem);
+        setIsModalVisible(true);
+    };
+
+    const handleUpdate = async (repoObj: IRepo) => {
+        const updatedRepo: IRepo = await updateRepoAPI(repoObj);
+        const newRepos: Array<IRepo> = updateRepo(updatedRepo, repos);
+        setRepos(newRepos);
+        closeModal();
     };
 
     const renderReposHeader = () => {
@@ -55,15 +72,34 @@ const Repo: FC = () => {
                 header={renderReposHeader()}
                 bordered
                 dataSource={repos}
-                renderItem={(repo: IRepo) => (
+                renderItem={(repoItem: IRepo) => (
                     <List.Item
                         className='repo-item'
-                        onClick={() => history.push(`/repos/${repo.id}`)}
+                        onClick={() => history.push(`/repos/${repoItem.id}`)}
                     >
-                        <Text strong>{repo.name}</Text>
+                        <Text strong>{repoItem.name}</Text>
+                        <div className='action-container'>
+                            <EditOutlined
+                                onClick={(event: React.MouseEvent) =>
+                                    openUpdateModal(event, repoItem)
+                                }
+                            />
+                        </div>
                     </List.Item>
                 )}
             />
+        );
+    };
+
+    const renderTitle = () => {
+        return repo ? 'Update repo' : 'Create repo';
+    };
+
+    const renderRepoForm = () => {
+        return repo ? (
+            <RepoForm repo={repo} btnTitle='Update' onSubmit={handleUpdate} />
+        ) : (
+            <RepoForm repo={null} btnTitle='Create' onSubmit={handleCreate} />
         );
     };
 
@@ -71,17 +107,13 @@ const Repo: FC = () => {
         <div className='repo-page'>
             {renderRepos()}
             <Modal
-                title='Create repo'
-                visible={isCreateModalVisible}
+                title={renderTitle()}
+                visible={isModalVisible}
                 footer={null}
-                onCancel={closeCreateModal}
+                onCancel={closeModal}
                 destroyOnClose
             >
-                <RepoForm
-                    repo={null}
-                    btnTitle='Create'
-                    onSubmit={handleCreate}
-                />
+                {renderRepoForm()}
             </Modal>
         </div>
     );
