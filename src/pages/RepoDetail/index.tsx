@@ -4,8 +4,8 @@ import { Card, List, Typography } from 'antd';
 import { getRepoDetailAPI } from 'apis/repo.api';
 import { IList } from 'interfaces/list.interface';
 import { IRepo } from 'interfaces/repo.interface';
-import './RepoDetail.scss';
 import { ICard } from 'interfaces/card.interface';
+import './RepoDetail.scss';
 
 const { Text } = Typography;
 
@@ -25,7 +25,7 @@ const RepoDetail: FC = () => {
     const renderListItem = (cards: Array<ICard> = []) => {
         return cards.map((card: ICard) => {
             const { id, text } = card;
-            return <Card key={id} title={text} />;
+            return <Card className='card' key={id} title={text} />;
         });
     };
 
@@ -33,13 +33,16 @@ const RepoDetail: FC = () => {
         const { lists = [] }: { lists: Array<IList> } = repo || ({} as IRepo);
         return (
             <List
+                className='list-container'
                 grid={{ gutter: 16, column: 4 }}
                 dataSource={lists}
                 renderItem={(list: IList) => {
                     const { cards = [] } = list || {};
                     return (
-                        <List.Item>
-                            <Text strong>{list.title}</Text>
+                        <List.Item className='list-item'>
+                            <Text strong className='list-title'>
+                                {list.title}
+                            </Text>
                             {renderListItem(cards)}
                         </List.Item>
                     );
@@ -49,7 +52,7 @@ const RepoDetail: FC = () => {
     };
 
     return (
-        <div>
+        <div className='repo-detail'>
             <h1>{repo?.name}</h1>
             {renderList()}
         </div>
