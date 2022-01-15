@@ -9,7 +9,7 @@ const updateRepo = (
     repos: Array<IRepo> = []
 ): Array<IRepo> => {
     const cloneRepos: Array<IRepo> = [...repos];
-    const repoIndex = cloneRepos.findIndex(
+    const repoIndex: number = cloneRepos.findIndex(
         (repo: IRepo) => repo.id === updatedRepo.id
     );
     const hasRepo: boolean = repoIndex > -1;
@@ -24,7 +24,7 @@ const deleteRepo = (
     repos: Array<IRepo> = []
 ): Array<IRepo> => {
     const cloneRepos: Array<IRepo> = [...repos];
-    const repoIndex = cloneRepos.findIndex(
+    const repoIndex: number = cloneRepos.findIndex(
         (repo: IRepo) => repo.id === updatedRepo.id
     );
     const hasRepo: boolean = repoIndex > -1;
