@@ -12,6 +12,11 @@ import {
     removeCardFromList,
     updateListForRepo,
 } from 'utils/list.util';
+import { LIST_TITLES } from 'constants/list.constant';
+
+const { FALSE_POSITIVE, FIXED, CONFIRMED } = LIST_TITLES;
+const FINAL_LIST = [FALSE_POSITIVE, FIXED];
+const CONFIRMED_MOVE_LIST = [FIXED];
 
 const { Text } = Typography;
 
@@ -47,7 +52,12 @@ const RepoDetail: FC = () => {
         const dragInformation: IDraggedInformation =
             JSON.parse(dragInformationStr);
         const { draggedCard, draggedList } = dragInformation || {};
-        if (list.id === draggedList.id) {
+        const canNotMoveCard: boolean =
+            list.id === draggedList.id ||
+            FINAL_LIST.includes(draggedList.title) ||
+            (draggedList.title === CONFIRMED &&
+                !CONFIRMED_MOVE_LIST.includes(list.title));
+        if (canNotMoveCard) {
             return;
         }
         const addedList: IList = addCardIntoList(draggedCard, list);
