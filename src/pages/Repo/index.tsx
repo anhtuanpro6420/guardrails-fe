@@ -93,6 +93,7 @@ const Repo: FC = () => {
                         <Text strong>{repoItem.name}</Text>
                         <div className='action-container'>
                             <EditOutlined
+                                className='edit-repo-icon'
                                 onClick={(event: React.MouseEvent) =>
                                     openUpdateModal(event, repoItem)
                                 }
