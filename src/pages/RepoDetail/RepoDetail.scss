@@ -18,6 +18,10 @@
             .card {
                 margin-bottom: 10px;
                 border-radius: 6px;
+                .card-title {
+                    display: flex;
+                    justify-content: space-between;
+                }
             }
         }
     }

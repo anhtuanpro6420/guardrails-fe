@@ -13,11 +13,12 @@ import {
     updateListForRepo,
 } from 'utils/list.util';
 import { LIST_TITLES } from 'constants/list.constant';
-import { PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import CardForm from 'components/CardForm';
-import { createCardAPI, updateCardAPI } from 'apis/card.api';
+import { createCardAPI, deleteCardAPI, updateCardAPI } from 'apis/card.api';
 import {
     addCardIntoRepoByList,
+    deleteCardIntoRepoByList,
     updateCardIntoRepoByList,
 } from 'utils/card.util';
 
@@ -123,10 +124,40 @@ const RepoDetail: FC = () => {
         closeModal();
     };
 
+    const deleteCard = async (
+        event: React.MouseEvent,
+        cardObj: ICard,
+        list: IList
+    ) => {
+        event.stopPropagation();
+        const { id: cardId } = cardObj;
+        const { id: listId } = list;
+        const deletedCard: ICard = await deleteCardAPI(cardId);
+        const newRepo: IRepo = deleteCardIntoRepoByList(
+            { card: deletedCard, listId: listId! },
+            repo!
+        );
+        setRepo(newRepo);
+    };
+
+    const renderCardTitle = (card: ICard, list: IList) => {
+        const { text } = card;
+        return (
+            <div className='card-title'>
+                <Text strong>{text}</Text>
+                <DeleteOutlined
+                    onClick={(event: React.MouseEvent) =>
+                        deleteCard(event, card, list)
+                    }
+                />
+            </div>
+        );
+    };
+
     const renderListItem = (list: IList) => {
         const { cards = [] } = list || {};
         return cards.map((cardItem: ICard) => {
-            const { id, text, note } = cardItem;
+            const { id, note } = cardItem;
             const dragInformation: IDraggedInformation = {
                 draggedCard: cardItem,
                 draggedList: list,
@@ -135,7 +166,7 @@ const RepoDetail: FC = () => {
                 <Card
                     className='card'
                     key={id}
-                    title={text}
+                    title={renderCardTitle(cardItem, list)}
                     draggable
                     onDragStart={(event: React.DragEvent<HTMLDivElement>) =>
                         onDragCardStart(event, dragInformation)

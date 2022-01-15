@@ -22,4 +22,11 @@ const updateCardAPI = async (cardObj: ICard): Promise<ICard> => {
     return card;
 };
 
-export { createCardAPI, updateCardAPI };
+const deleteCardAPI = async (cardId: string): Promise<ICard> => {
+    const { data: card }: { data: ICard } = await axios.delete(
+        `/card/${cardId}`
+    );
+    return card;
+};
+
+export { createCardAPI, updateCardAPI, deleteCardAPI };
