@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { List, Button, Modal } from 'antd';
+import { List, Modal } from 'antd';
 import {
     createRepoAPI,
     deleteRepoAPI,
@@ -13,6 +12,7 @@ import './Repo.scss';
 import RepoForm from 'components/RepoForm';
 import { createRepo, deleteRepo, updateRepo } from 'utils/repo.util';
 import RepoItem from 'components/RepoItem';
+import ReposHeader from 'components/ReposHeader';
 
 const Repo: FC = () => {
     const history = useHistory();
@@ -66,22 +66,10 @@ const Repo: FC = () => {
         setRepos(newRepos);
     };
 
-    const renderReposHeader = () => {
-        return (
-            <div className='repo-header'>
-                <h1>Repositories</h1>
-                <Button
-                    type='primary'
-                    icon={<PlusOutlined onClick={openCreateModal} />}
-                />
-            </div>
-        );
-    };
-
     const renderRepos = () => {
         return (
             <List
-                header={renderReposHeader()}
+                header={<ReposHeader onCreateClick={openCreateModal} />}
                 bordered
                 dataSource={repos}
                 renderItem={(repoItem: IRepo) => (
@@ -98,29 +86,29 @@ const Repo: FC = () => {
         );
     };
 
-    const renderTitle = () => {
-        return repo ? 'Update repo' : 'Create repo';
-    };
-
-    const renderRepoForm = () => {
-        return repo ? (
-            <RepoForm repo={repo} btnTitle='Update' onSubmit={handleUpdate} />
-        ) : (
-            <RepoForm repo={null} btnTitle='Create' onSubmit={handleCreate} />
-        );
-    };
-
     return (
         <div className='repo-page'>
             {renderRepos()}
             <Modal
-                title={renderTitle()}
+                title={repo ? 'Update repo' : 'Create repo'}
                 visible={isModalVisible}
                 footer={null}
                 onCancel={closeModal}
                 destroyOnClose
             >
-                {renderRepoForm()}
+                {repo ? (
+                    <RepoForm
+                        repo={repo}
+                        btnTitle='Update'
+                        onSubmit={handleUpdate}
+                    />
+                ) : (
+                    <RepoForm
+                        repo={null}
+                        btnTitle='Create'
+                        onSubmit={handleCreate}
+                    />
+                )}
             </Modal>
         </div>
     );
