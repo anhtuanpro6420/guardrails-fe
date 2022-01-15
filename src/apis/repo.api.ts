@@ -27,7 +27,7 @@ const updateRepoAPI = async (repoObj: IRepo): Promise<IRepo> => {
     return repo;
 };
 
-const deleteRepoAPI = async (repoId: number): Promise<IRepo> => {
+const deleteRepoAPI = async (repoId: string): Promise<IRepo> => {
     const { data: repo }: { data: IRepo } = await axios.delete(
         `/repo/${repoId}`
     );
