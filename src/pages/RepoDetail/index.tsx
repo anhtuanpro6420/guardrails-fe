@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, List, Modal, Typography } from 'antd';
+import { List, Modal } from 'antd';
 import { getRepoDetailAPI, updateRepoAPI } from 'apis/repo.api';
 import { IList } from 'interfaces/list.interface';
 import { IRepo } from 'interfaces/repo.interface';
@@ -13,7 +13,6 @@ import {
     updateListForRepo,
 } from 'utils/list.util';
 import { LIST_TITLES } from 'constants/list.constant';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import CardForm from 'components/CardForm';
 import { createCardAPI, deleteCardAPI, updateCardAPI } from 'apis/card.api';
 import {
@@ -21,12 +20,11 @@ import {
     deleteCardIntoRepoByList,
     updateCardIntoRepoByList,
 } from 'utils/card.util';
+import ListItem from 'components/ListItem';
 
 const { FALSE_POSITIVE, FIXED, CONFIRMED } = LIST_TITLES;
 const FINAL_LIST = [FALSE_POSITIVE, FIXED];
 const CONFIRMED_MOVE_LIST = [FIXED];
-
-const { Text } = Typography;
 
 const RepoDetail: FC = () => {
     const { repoId }: { repoId: string } = useParams();
@@ -80,10 +78,6 @@ const RepoDetail: FC = () => {
         );
         const updatedRepo: IRepo = await updateRepoAPI(removedRepo!);
         setRepo(updatedRepo);
-    };
-
-    const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
     };
 
     const openCreateCardModal = (list: IList) => {
@@ -140,48 +134,6 @@ const RepoDetail: FC = () => {
         setRepo(newRepo);
     };
 
-    const renderCardTitle = (card: ICard, list: IList) => {
-        const { text } = card;
-        return (
-            <div className='card-title'>
-                <Text strong>{text}</Text>
-                <DeleteOutlined
-                    onClick={(event: React.MouseEvent) =>
-                        deleteCard(event, card, list)
-                    }
-                />
-            </div>
-        );
-    };
-
-    const renderListItem = (list: IList) => {
-        const { cards = [] } = list || {};
-        return cards.map((cardItem: ICard) => {
-            const { id, note } = cardItem;
-            const dragInformation: IDraggedInformation = {
-                draggedCard: cardItem,
-                draggedList: list,
-            };
-            return (
-                <Card
-                    className='card'
-                    key={id}
-                    title={renderCardTitle(cardItem, list)}
-                    draggable
-                    onDragStart={(event: React.DragEvent<HTMLDivElement>) =>
-                        onDragCardStart(event, dragInformation)
-                    }
-                    onDragOver={(event: React.DragEvent<HTMLDivElement>) =>
-                        onDragOver(event)
-                    }
-                    onClick={() => openUpdateCardModal(cardItem, list)}
-                >
-                    {note}
-                </Card>
-            );
-        });
-    };
-
     const renderList = () => {
         const { lists = [] }: { lists: Array<IList> } = repo || ({} as IRepo);
         return (
@@ -191,47 +143,16 @@ const RepoDetail: FC = () => {
                 dataSource={lists}
                 renderItem={(list: IList) => {
                     return (
-                        <List.Item
-                            className='list-item'
-                            onDrop={(event: React.DragEvent<HTMLDivElement>) =>
-                                onDropIntoList(event, list)
-                            }
-                            onDragOver={(
-                                event: React.DragEvent<HTMLDivElement>
-                            ) => onDragOver(event)}
-                        >
-                            <div className='list-item-header'>
-                                <Text strong className='list-title'>
-                                    {list.title}
-                                </Text>
-                                <PlusOutlined
-                                    onClick={() => openCreateCardModal(list)}
-                                />
-                            </div>
-                            {renderListItem(list)}
-                        </List.Item>
+                        <ListItem
+                            list={list}
+                            onDropIntoList={onDropIntoList}
+                            onCreateCardClick={openCreateCardModal}
+                            onDragCardStart={onDragCardStart}
+                            onCardClick={openUpdateCardModal}
+                            onDeleteCardClick={deleteCard}
+                        />
                     );
                 }}
-            />
-        );
-    };
-
-    const renderTitle = () => {
-        return selectedCard ? 'Update card' : 'Create card';
-    };
-
-    const renderCardForm = () => {
-        return selectedCard ? (
-            <CardForm
-                card={selectedCard}
-                btnTitle='Update'
-                onSubmit={handleUpdate}
-            />
-        ) : (
-            <CardForm
-                card={null}
-                btnTitle='Create'
-                onSubmit={handleCreateCard}
             />
         );
     };
@@ -241,13 +162,25 @@ const RepoDetail: FC = () => {
             <h1>{repo?.name}</h1>
             {renderList()}
             <Modal
-                title={renderTitle()}
+                title={selectedCard ? 'Update card' : 'Create card'}
                 visible={isModalVisible}
                 footer={null}
                 onCancel={closeModal}
                 destroyOnClose
             >
-                {renderCardForm()}
+                {selectedCard ? (
+                    <CardForm
+                        card={selectedCard}
+                        btnTitle='Update'
+                        onSubmit={handleUpdate}
+                    />
+                ) : (
+                    <CardForm
+                        card={null}
+                        btnTitle='Create'
+                        onSubmit={handleCreateCard}
+                    />
+                )}
             </Modal>
         </div>
     );
