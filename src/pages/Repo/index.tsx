@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { Typography, List, Button, Modal } from 'antd';
+import { List, Button, Modal } from 'antd';
 import {
     createRepoAPI,
     deleteRepoAPI,
@@ -12,8 +12,7 @@ import { IRepo } from 'interfaces/repo.interface';
 import './Repo.scss';
 import RepoForm from 'components/RepoForm';
 import { createRepo, deleteRepo, updateRepo } from 'utils/repo.util';
-
-const { Text } = Typography;
+import RepoItem from 'components/RepoItem';
 
 const Repo: FC = () => {
     const history = useHistory();
@@ -86,27 +85,14 @@ const Repo: FC = () => {
                 bordered
                 dataSource={repos}
                 renderItem={(repoItem: IRepo) => (
-                    <List.Item
-                        className='repo-item'
-                        onClick={() => history.push(`/repos/${repoItem.id}`)}
-                    >
-                        <Text strong>{repoItem.name}</Text>
-                        <div className='action-container'>
-                            <EditOutlined
-                                className='edit-repo-icon'
-                                onClick={(event: React.MouseEvent) =>
-                                    openUpdateModal(event, repoItem)
-                                }
-                            />
-                            <DeleteOutlined
-                                key='delete'
-                                data-testid='delete-icon'
-                                onClick={(event: React.MouseEvent) =>
-                                    handleDelete(event, repoItem)
-                                }
-                            />
-                        </div>
-                    </List.Item>
+                    <RepoItem
+                        repo={repoItem}
+                        onItemClick={() =>
+                            history.push(`/repos/${repoItem.id}`)
+                        }
+                        onEditClick={openUpdateModal}
+                        onDeleteClick={handleDelete}
+                    />
                 )}
             />
         );
