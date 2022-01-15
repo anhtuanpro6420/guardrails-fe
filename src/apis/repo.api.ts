@@ -20,10 +20,9 @@ const createRepoAPI = async (repoObj: IRepo): Promise<IRepo> => {
 };
 
 const updateRepoAPI = async (repoObj: IRepo): Promise<IRepo> => {
-    const { id, name } = repoObj;
+    const { id } = repoObj;
     const { data: repo }: { data: IRepo } = await axios.put(`/repo/${id}`, {
-        id,
-        name,
+        ...repoObj,
     });
     return repo;
 };

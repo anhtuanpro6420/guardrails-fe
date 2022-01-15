@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, List, Typography } from 'antd';
-import { getRepoDetailAPI } from 'apis/repo.api';
+import { getRepoDetailAPI, updateRepoAPI } from 'apis/repo.api';
 import { IList } from 'interfaces/list.interface';
 import { IRepo } from 'interfaces/repo.interface';
 import { ICard } from 'interfaces/card.interface';
@@ -38,7 +38,7 @@ const RepoDetail: FC = () => {
         );
     };
 
-    const onDropIntoList = (
+    const onDropIntoList = async (
         event: React.DragEvent<HTMLDivElement>,
         list: IList
     ) => {
@@ -57,7 +57,8 @@ const RepoDetail: FC = () => {
             removedList,
             addedRepo
         );
-        setRepo(removedRepo);
+        const updatedRepo: IRepo = await updateRepoAPI(removedRepo!);
+        setRepo(updatedRepo);
     };
 
     const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
