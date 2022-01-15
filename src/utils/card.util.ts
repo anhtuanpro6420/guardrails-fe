@@ -24,3 +24,33 @@ export const addCardIntoRepoByList = (
     cloneRepo.lists = cloneLists;
     return cloneRepo;
 };
+
+export const updateCardIntoRepoByList = (
+    updateObj: { card: ICard; listId: string },
+    repo: IRepo
+) => {
+    const { card, listId } = updateObj || {};
+    const cloneRepo: IRepo = { ...repo };
+    const { lists = [] } = cloneRepo || {};
+    const cloneLists: Array<IList> = [...lists];
+    const listIndex: number = cloneLists.findIndex(
+        (ls: IList) => ls.id === listId
+    );
+    const hasList: boolean = listIndex > -1;
+    if (!hasList) {
+        return cloneRepo;
+    }
+    const { cards = [] } = cloneLists[listIndex] || {};
+    const cloneCards: Array<ICard> = [...cards];
+    const cardIndex: number = cloneCards.findIndex(
+        (cd: ICard) => cd.id === card.id
+    );
+    const hasCard: boolean = cardIndex > -1;
+    if (!hasCard) {
+        return cloneRepo;
+    }
+    cloneCards[cardIndex] = { ...card };
+    cloneLists[listIndex].cards = cloneCards;
+    cloneRepo.lists = cloneLists;
+    return cloneRepo;
+};

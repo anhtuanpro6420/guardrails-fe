@@ -16,7 +16,10 @@ import { LIST_TITLES } from 'constants/list.constant';
 import { PlusOutlined } from '@ant-design/icons';
 import CardForm from 'components/CardForm';
 import { createCardAPI, updateCardAPI } from 'apis/card.api';
-import { addCardIntoRepoByList } from 'utils/card.util';
+import {
+    addCardIntoRepoByList,
+    updateCardIntoRepoByList,
+} from 'utils/card.util';
 
 const { FALSE_POSITIVE, FIXED, CONFIRMED } = LIST_TITLES;
 const FINAL_LIST = [FALSE_POSITIVE, FIXED];
@@ -82,7 +85,7 @@ const RepoDetail: FC = () => {
         event.preventDefault();
     };
 
-    const openCreateModal = (list: IList) => {
+    const openCreateCardModal = (list: IList) => {
         setSelectedList(list);
         setIsModalVisible(true);
     };
@@ -92,7 +95,7 @@ const RepoDetail: FC = () => {
         setIsModalVisible(false);
     };
 
-    const handleCreate = async (cardObj: ICard) => {
+    const handleCreateCard = async (cardObj: ICard) => {
         const { id: listId } = selectedList || {};
         const createdCard: ICard = await createCardAPI(cardObj, listId!);
         const newRepo: IRepo = addCardIntoRepoByList(
@@ -103,10 +106,20 @@ const RepoDetail: FC = () => {
         closeModal();
     };
 
+    const openUpdateCardModal = (cardItem: ICard, list: IList) => {
+        setSelectedCard(cardItem);
+        setSelectedList(list);
+        setIsModalVisible(true);
+    };
+
     const handleUpdate = async (cardObj: ICard) => {
+        const { id: listId } = selectedList || {};
         const updatedCard: ICard = await updateCardAPI(cardObj);
-        // const newRepos: Array<ICard> = updateRepo(updatedCard, repos);
-        // setRepos(newRepos);
+        const newRepo: IRepo = updateCardIntoRepoByList(
+            { card: updatedCard, listId: listId! },
+            repo!
+        );
+        setRepo(newRepo);
         closeModal();
     };
 
@@ -124,8 +137,13 @@ const RepoDetail: FC = () => {
                     key={id}
                     title={text}
                     draggable
-                    onDragStart={e => onDragCardStart(e, dragInformation)}
-                    onDragOver={e => onDragOver(e)}
+                    onDragStart={(event: React.DragEvent<HTMLDivElement>) =>
+                        onDragCardStart(event, dragInformation)
+                    }
+                    onDragOver={(event: React.DragEvent<HTMLDivElement>) =>
+                        onDragOver(event)
+                    }
+                    onClick={() => openUpdateCardModal(cardItem, list)}
                 >
                     {note}
                 </Card>
@@ -135,7 +153,6 @@ const RepoDetail: FC = () => {
 
     const renderList = () => {
         const { lists = [] }: { lists: Array<IList> } = repo || ({} as IRepo);
-        console.log(`render repo`, repo);
         return (
             <List
                 className='list-container'
@@ -157,7 +174,7 @@ const RepoDetail: FC = () => {
                                     {list.title}
                                 </Text>
                                 <PlusOutlined
-                                    onClick={() => openCreateModal(list)}
+                                    onClick={() => openCreateCardModal(list)}
                                 />
                             </div>
                             {renderListItem(list)}
@@ -180,7 +197,11 @@ const RepoDetail: FC = () => {
                 onSubmit={handleUpdate}
             />
         ) : (
-            <CardForm card={null} btnTitle='Create' onSubmit={handleCreate} />
+            <CardForm
+                card={null}
+                btnTitle='Create'
+                onSubmit={handleCreateCard}
+            />
         );
     };
 
