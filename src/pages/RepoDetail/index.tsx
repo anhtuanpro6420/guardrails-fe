@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, List, Typography } from 'antd';
+import { Card, List, Modal, Typography } from 'antd';
 import { getRepoDetailAPI, updateRepoAPI } from 'apis/repo.api';
 import { IList } from 'interfaces/list.interface';
 import { IRepo } from 'interfaces/repo.interface';
@@ -13,6 +13,10 @@ import {
     updateListForRepo,
 } from 'utils/list.util';
 import { LIST_TITLES } from 'constants/list.constant';
+import { PlusOutlined } from '@ant-design/icons';
+import CardForm from 'components/CardForm';
+import { createCardAPI, updateCardAPI } from 'apis/card.api';
+import { addCardIntoRepoByList } from 'utils/card.util';
 
 const { FALSE_POSITIVE, FIXED, CONFIRMED } = LIST_TITLES;
 const FINAL_LIST = [FALSE_POSITIVE, FIXED];
@@ -23,6 +27,9 @@ const { Text } = Typography;
 const RepoDetail: FC = () => {
     const { repoId }: { repoId: string } = useParams();
     const [repo, setRepo] = useState<IRepo | null>(null);
+    const [selectedList, setSelectedList] = useState<IList | null>(null);
+    const [selectedCard, setSelectedCard] = useState<ICard | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const fetchRepoDetail = async (id: string) => {
         const repoResponse: IRepo = await getRepoDetailAPI(id);
@@ -75,12 +82,40 @@ const RepoDetail: FC = () => {
         event.preventDefault();
     };
 
+    const openCreateModal = (list: IList) => {
+        setSelectedList(list);
+        setIsModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setSelectedCard(null);
+        setIsModalVisible(false);
+    };
+
+    const handleCreate = async (cardObj: ICard) => {
+        const { id: listId } = selectedList || {};
+        const createdCard: ICard = await createCardAPI(cardObj, listId!);
+        const newRepo: IRepo = addCardIntoRepoByList(
+            { card: createdCard, listId: listId! },
+            repo!
+        );
+        setRepo(newRepo);
+        closeModal();
+    };
+
+    const handleUpdate = async (cardObj: ICard) => {
+        const updatedCard: ICard = await updateCardAPI(cardObj);
+        // const newRepos: Array<ICard> = updateRepo(updatedCard, repos);
+        // setRepos(newRepos);
+        closeModal();
+    };
+
     const renderListItem = (list: IList) => {
         const { cards = [] } = list || {};
-        return cards.map((card: ICard) => {
-            const { id, text } = card;
+        return cards.map((cardItem: ICard) => {
+            const { id, text, note } = cardItem;
             const dragInformation: IDraggedInformation = {
-                draggedCard: card,
+                draggedCard: cardItem,
                 draggedList: list,
             };
             return (
@@ -91,13 +126,16 @@ const RepoDetail: FC = () => {
                     draggable
                     onDragStart={e => onDragCardStart(e, dragInformation)}
                     onDragOver={e => onDragOver(e)}
-                />
+                >
+                    {note}
+                </Card>
             );
         });
     };
 
     const renderList = () => {
         const { lists = [] }: { lists: Array<IList> } = repo || ({} as IRepo);
+        console.log(`render repo`, repo);
         return (
             <List
                 className='list-container'
@@ -114,9 +152,14 @@ const RepoDetail: FC = () => {
                                 event: React.DragEvent<HTMLDivElement>
                             ) => onDragOver(event)}
                         >
-                            <Text strong className='list-title'>
-                                {list.title}
-                            </Text>
+                            <div className='list-item-header'>
+                                <Text strong className='list-title'>
+                                    {list.title}
+                                </Text>
+                                <PlusOutlined
+                                    onClick={() => openCreateModal(list)}
+                                />
+                            </div>
                             {renderListItem(list)}
                         </List.Item>
                     );
@@ -125,10 +168,35 @@ const RepoDetail: FC = () => {
         );
     };
 
+    const renderTitle = () => {
+        return selectedCard ? 'Update card' : 'Create card';
+    };
+
+    const renderCardForm = () => {
+        return selectedCard ? (
+            <CardForm
+                card={selectedCard}
+                btnTitle='Update'
+                onSubmit={handleUpdate}
+            />
+        ) : (
+            <CardForm card={null} btnTitle='Create' onSubmit={handleCreate} />
+        );
+    };
+
     return (
         <div className='repo-detail'>
             <h1>{repo?.name}</h1>
             {renderList()}
+            <Modal
+                title={renderTitle()}
+                visible={isModalVisible}
+                footer={null}
+                onCancel={closeModal}
+                destroyOnClose
+            >
+                {renderCardForm()}
+            </Modal>
         </div>
     );
 };
