@@ -17,6 +17,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `yarn run dev`
+
+Build the image and run the docker container for project
+
 ### `yarn start`
 
 Runs the app in the development mode.\
