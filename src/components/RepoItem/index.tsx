@@ -21,17 +21,18 @@ const RepoItem: FC<Props> = ({
 }) => {
     return (
         <List.Item className='repo-item' onClick={() => onItemClick(repo.id)}>
-            <Text strong>{repo.name}</Text>
+            <h3 className='repo-name'>{repo.name}</h3>
             <div className='action-container'>
                 <EditOutlined
                     className='edit-repo-icon'
+                    data-testid='edit-repo-icon'
                     onClick={(event: React.MouseEvent) =>
                         onEditClick(event, repo)
                     }
                 />
                 <DeleteOutlined
                     key='delete'
-                    data-testid='delete-icon'
+                    data-testid='delete-repo-icon'
                     onClick={(event: React.MouseEvent) =>
                         onDeleteClick(event, repo)
                     }

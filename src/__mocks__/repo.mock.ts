@@ -6,3 +6,7 @@ export const mockRepo: IRepo = {
     name: 'Mock Repo',
     lists: mockLists,
 };
+
+export const onItemClick = jest.fn();
+export const onEditClick = jest.fn();
+export const onDeleteClick = jest.fn();
