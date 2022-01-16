@@ -14,6 +14,7 @@ const ReposHeader: FC<Props> = ({ onCreateClick }) => {
             <Button
                 type='primary'
                 icon={<PlusOutlined onClick={onCreateClick} />}
+                data-testid='create-repo-button'
             />
         </div>
     );
