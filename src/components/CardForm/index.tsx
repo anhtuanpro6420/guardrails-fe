@@ -29,7 +29,7 @@ const CardForm: FC<Props> = ({ card, btnTitle, onSubmit }) => {
                 name='text'
                 rules={[{ required: true, message: 'Please input card text!' }]}
             >
-                <Input data-testid='card-text' />
+                <Input data-testid='text-input' />
             </Form.Item>
 
             <Form.Item
@@ -37,7 +37,7 @@ const CardForm: FC<Props> = ({ card, btnTitle, onSubmit }) => {
                 name='note'
                 rules={[{ required: true, message: 'Please input card note!' }]}
             >
-                <Input.TextArea data-testid='card-note' />
+                <Input.TextArea data-testid='note-input' />
             </Form.Item>
 
             <Form.Item className='button-container'>

@@ -30,3 +30,4 @@ export const mockCards: Array<ICard> = [
 ];
 
 export const onDeleteCardClick = jest.fn();
+export const onSubmit = jest.fn();
