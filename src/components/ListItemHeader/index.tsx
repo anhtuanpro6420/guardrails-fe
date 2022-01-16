@@ -1,10 +1,7 @@
 import React, { FC } from 'react';
-import { Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { IList } from 'interfaces/list.interface';
 import './ListItemHeader.scss';
-
-const { Text } = Typography;
 
 interface Props {
     list: IList;
@@ -14,10 +11,11 @@ interface Props {
 const ListItemHeader: FC<Props> = ({ list, onCreateCardClick }) => {
     return (
         <div className='list-item-header'>
-            <Text strong className='list-title'>
-                {list.title}
-            </Text>
-            <PlusOutlined onClick={() => onCreateCardClick(list)} />
+            <h3 className='list-title'>{list.title}</h3>
+            <PlusOutlined
+                onClick={() => onCreateCardClick(list)}
+                data-testid='plus-icon'
+            />
         </div>
     );
 };

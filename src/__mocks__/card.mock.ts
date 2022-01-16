@@ -1,5 +1,4 @@
 import { ICard } from 'interfaces/card.interface';
-import { IList } from 'interfaces/list.interface';
 
 export const mockCard: ICard = {
     id: '1',
@@ -29,11 +28,5 @@ export const mockCards: Array<ICard> = [
         note: 'Note Mock Card 4',
     },
 ];
-
-export const mockList: IList = {
-    id: '1',
-    title: 'Mock List',
-    cards: mockCards,
-};
 
 export const onDeleteCardClick = jest.fn();

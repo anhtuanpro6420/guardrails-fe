@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { mockCard, mockList, onDeleteCardClick } from '__mocks__/card.mock';
+import { mockCard, onDeleteCardClick } from '__mocks__/card.mock';
+import { mockList } from '__mocks__/list.mock';
 import CardTitle from '../index';
 
 describe('CardTitle', () => {

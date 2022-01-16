@@ -1,11 +1,8 @@
 import React, { FC } from 'react';
-import { Typography } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { IList } from 'interfaces/list.interface';
 import { ICard } from 'interfaces/card.interface';
 import './CardTitle.scss';
-
-const { Text } = Typography;
 
 interface Props {
     card: ICard;
