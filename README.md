@@ -1,3 +1,14 @@
+# This is the project about manage repositories and lists and cards
+
+We can manage the repositories, can update and delete repository, can delete or update it.
+
+Into the repository, we have 4 lists: Open, Confirmed, False Positive, Fixed.
+
+Can move the card from Open to the rest column.
+Can move the card from Confirmed to Fixed.
+Can not move the card from False Positive or Fixed.
+Can create new card or delete or update the card.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
