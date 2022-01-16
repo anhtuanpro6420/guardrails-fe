@@ -15,9 +15,11 @@ const createCardAPI = async (
 };
 
 const updateCardAPI = async (cardObj: ICard): Promise<ICard> => {
-    const { id } = cardObj;
+    const { id, text, note } = cardObj;
     const { data: card }: { data: ICard } = await axios.put(`/card/${id}`, {
-        ...cardObj,
+        text,
+        note,
+        id,
     });
     return card;
 };

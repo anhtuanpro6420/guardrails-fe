@@ -69,6 +69,7 @@ const RepoDetail: FC = () => {
         if (canNotMoveCard) {
             return;
         }
+        draggedCard.movedDate = new Date().toISOString();
         const addedList: IList = addCardIntoList(draggedCard, list);
         const addedRepo: IRepo | null = updateListForRepo(addedList, repo);
         const removedList: IList = removeCardFromList(draggedCard, draggedList);

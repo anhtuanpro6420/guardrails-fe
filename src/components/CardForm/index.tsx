@@ -1,7 +1,9 @@
 import React, { FC } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import { ICard } from 'interfaces/card.interface';
 import './CardForm.scss';
+
+const { Text } = Typography;
 
 interface Props {
     card: ICard | null;
@@ -10,7 +12,7 @@ interface Props {
 }
 
 const CardForm: FC<Props> = ({ card, btnTitle, onSubmit }) => {
-    const { text, note } = card || {};
+    const { text, note, movedDate } = card || {};
 
     const onFinish = (cardObj: ICard) => {
         onSubmit({ ...card, ...cardObj });
@@ -39,6 +41,12 @@ const CardForm: FC<Props> = ({ card, btnTitle, onSubmit }) => {
             >
                 <Input.TextArea data-testid='note-input' />
             </Form.Item>
+
+            {movedDate && (
+                <Form.Item label='Moved date'>
+                    <Text disabled>{new Date(movedDate).toLocaleString()}</Text>
+                </Form.Item>
+            )}
 
             <Form.Item className='button-container'>
                 <Button
