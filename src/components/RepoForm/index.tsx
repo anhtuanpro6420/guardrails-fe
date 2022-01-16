@@ -29,7 +29,7 @@ const RepoForm: FC<Props> = ({ repo, btnTitle, onSubmit }) => {
                 name='name'
                 rules={[{ required: true, message: 'Please input repo name!' }]}
             >
-                <Input data-testid='repo-input' />
+                <Input data-testid='name-input' />
             </Form.Item>
 
             <Form.Item className='button-container'>

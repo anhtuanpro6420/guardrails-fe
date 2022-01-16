@@ -54,7 +54,7 @@ describe('CardForm', () => {
             expect(noteInput).toBeInTheDocument();
         });
 
-        test('should render update button', () => {
+        test('should render submit button', () => {
             render(
                 <CardForm
                     card={mockCard}

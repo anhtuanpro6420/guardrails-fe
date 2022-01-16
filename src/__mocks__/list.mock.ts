@@ -7,6 +7,29 @@ export const mockList: IList = {
     cards: mockCards,
 };
 
+export const mockLists: Array<IList> = [
+    {
+        id: '1',
+        title: 'Open',
+        cards: mockCards,
+    },
+    {
+        id: '2',
+        title: 'Confirmed',
+        cards: mockCards,
+    },
+    {
+        id: '3',
+        title: 'False Positive',
+        cards: mockCards,
+    },
+    {
+        id: '4',
+        title: 'Fixed',
+        cards: mockCards,
+    },
+];
+
 export const onDropIntoList = jest.fn();
 export const onCreateCardClick = jest.fn();
 export const onDragCardStart = jest.fn();
