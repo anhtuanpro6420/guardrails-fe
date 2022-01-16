@@ -7,4 +7,8 @@ export const mockList: IList = {
     cards: mockCards,
 };
 
+export const onDropIntoList = jest.fn();
 export const onCreateCardClick = jest.fn();
+export const onDragCardStart = jest.fn();
+export const onCardClick = jest.fn();
+export const onDeleteCardClick = jest.fn();
