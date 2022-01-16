@@ -1,10 +1,8 @@
 import React, { FC } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Typography, List } from 'antd';
+import { List } from 'antd';
 import { IRepo } from 'interfaces/repo.interface';
 import './RepoItem.scss';
-
-const { Text } = Typography;
 
 interface Props {
     repo: IRepo;
