@@ -7,6 +7,19 @@ export const mockRepo: IRepo = {
     lists: mockLists,
 };
 
+export const mockRepos: Array<IRepo> = [
+    {
+        id: '1',
+        name: 'Mock Repo 1',
+        lists: mockLists,
+    },
+    {
+        id: '2',
+        name: 'Mock Repo 2',
+        lists: mockLists,
+    },
+];
+
 export const onItemClick = jest.fn();
 export const onEditClick = jest.fn();
 export const onDeleteClick = jest.fn();
