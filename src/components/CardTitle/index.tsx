@@ -19,12 +19,13 @@ interface Props {
 
 const CardTitle: FC<Props> = ({ card, list, onDeleteCardClick }) => {
     return (
-        <div className='card-title'>
-            <Text strong>{card.text}</Text>
+        <div className='card-title-container'>
+            <h4 className='card-title'>{card.text}</h4>
             <DeleteOutlined
                 onClick={(event: React.MouseEvent) =>
                     onDeleteCardClick(event, card, list)
                 }
+                data-testid='delete-icon'
             />
         </div>
     );
